@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifeline Hospital Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero {
+            padding: 5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+        }
+        .hero-content {
+            flex: 1.2;
+        }
+        .hero-image-container {
+            flex: 0.8;
+            position: relative;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        .feature-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--primary-light), rgba(190, 90, 45, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        .feature-card h3 {
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>➕ Lifeline HMS</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <span id="dashboard-nav-item"></span>
+                <span id="auth-buttons">
+                    <a href="login.html" class="btn btn-secondary btn-sm" style="margin-right: 0.5rem;">Login</a>
+                    <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Experience <span>Next-Gen</span> Hospital Care</h1>
+                <p class="hero-subtitle">
+                    Manage appointments, digital prescriptions, patient health history, and staff tasks all in one secure, unified portal. Designed for efficiency, accuracy, and quick response times.
+                </p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-primary">Get Started Today</a>
+                    <a href="login.html" class="btn btn-secondary">Access Portal</a>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <!-- Visual container decoration to replace static placeholder image -->
+                <div class="card" style="padding: 3rem; text-align: center; background: linear-gradient(135deg, var(--primary-light), white); border: 2px solid white;">
+                    <div style="font-size: 4rem; margin-bottom: 1.5rem;">🏥</div>
+                    <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;">Lifeline Care Center</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">Digital Patient & Doctor Workspace</p>
+                    <div class="grid-2" style="gap: 1rem;">
+                        <div class="card" style="padding: 1rem; border-radius: var(--radius-sm);">
+                            <div style="font-weight: 800; color: var(--primary); font-size: 1.25rem;">24/7</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">Active Support</div>
+                        </div>
+                        <div class="card" style="padding: 1rem; border-radius: var(--radius-sm);">
+                            <div style="font-weight: 800; color: var(--accent); font-size: 1.25rem;">100%</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">Data Security</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 5rem;">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <h2 style="font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem;">Our Core Portal Features</h2>
+                <p style="color: var(--text-secondary);">Empowering patients and medical staff with modern web capabilities.</p>
+            </div>
+            <div class="grid-3">
+                <div class="card feature-card">
+                    <div class="feature-icon-wrapper">📅</div>
+                    <h3>Smart Scheduling</h3>
+                    <p>Book medical appointments instantly with your preferred specialists. Check slots and view updates in real-time.</p>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon-wrapper">📋</div>
+                    <h3>Digital Prescriptions</h3>
+                    <p>Doctors can compile and send prescriptions online. Patients can easily download them from their personalized portal.</p>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon-wrapper">👨‍⚕️</div>
+                    <h3>Medical Records</h3>
+                    <p>Patients secure their medical records online, allowing doctors immediate, authorized access to expedite diagnoses.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Lifeline Hospital Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = Auth.getUser();
+            if (user) {
+                // Change UI if already logged in
+                const authButtons = document.getElementById('auth-buttons');
+                const dashboardNavItem = document.getElementById('dashboard-nav-item');
+
+                dashboardNavItem.innerHTML = `<a href="#" id="dashboard-link" class="nav-link">Dashboard</a>`;
+                authButtons.innerHTML = `
+                    <span style="font-weight: 600; margin-right: 1rem; color: var(--text-secondary);">Hello, ${user.fullName}</span>
+                    <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Logout</button>
+                `;
+
+                document.getElementById('dashboard-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Auth.redirectToDashboard(user.role);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

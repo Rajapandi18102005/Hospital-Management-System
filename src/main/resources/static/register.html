@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register HMS Portal Account</title>
+    <meta name="description" content="Create a new account on the Lifeline Hospital Management System as a Patient, Doctor, or Administrator.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .role-fields {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .role-fields.visible {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .role-badge {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .role-badge.patient { background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0369a1; }
+        .role-badge.doctor  { background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #15803d; }
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+        .optional-tag {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-left: 4px;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* Availability Grid */
+        .avail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .avail-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+        .avail-preview {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            border-radius: 12px;
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(21, 128, 61, 0.05);
+        }
+
+        /* ── Premium Split Layout Theme ── */
+        .auth-split-layout {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 74px); /* Account for header */
+        }
+        
+        .auth-visual {
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.85), rgba(0, 180, 216, 0.75)), url('images/auth-bg.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            padding: 4rem;
+            animation: bgPan 40s infinite alternate linear;
+        }
+        
+        @keyframes bgPan {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .visual-content {
+            position: relative;
+            z-index: 2;
+            max-width: 550px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 3.5rem;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUpFade 1s forwards 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .visual-content h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .visual-content p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 400;
+        }
+
+        .features-list {
+            margin-top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+        
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        /* Floating abstract shapes */
+        .shape {
+            position: absolute;
+            filter: blur(60px);
+            border-radius: 50%;
+            z-index: 1;
+            animation: floatShape 10s infinite alternate ease-in-out;
+        }
+        .shape-1 {
+            width: 400px; height: 400px;
+            background: rgba(67, 97, 238, 0.6);
+            top: -100px; left: -100px;
+        }
+        .shape-2 {
+            width: 500px; height: 500px;
+            background: rgba(0, 180, 216, 0.5);
+            bottom: -150px; right: -150px;
+            animation-delay: -5s;
+        }
+        
+        @keyframes floatShape {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            100% { transform: translateY(-60px) scale(1.1) rotate(15deg); }
+        }
+        
+        .auth-form-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-main);
+            padding: 3rem 2rem;
+            position: relative;
+        }
+        
+        .enhanced-card {
+            max-width: 600px !important;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(24px) !important;
+            -webkit-backdrop-filter: blur(24px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1) !important;
+            border-radius: 28px !important;
+            padding: 3.5rem !important;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUpFade 1s forwards 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .enhanced-card .auth-header h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Enhanced Form Inputs */
+        .enhanced-form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .enhanced-form-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .enhanced-form-group .form-control {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(0, 0, 0, 0.06);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .enhanced-form-group .form-control:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.12), inset 0 0 0 1px var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .enhanced-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 14px !important;
+            padding: 1.2rem !important;
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.03em;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.25) !important;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            border: none !important;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .enhanced-btn-primary:hover {
+            transform: translateY(-4px) scale(1.02) !important;
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.35) !important;
+        }
+        
+        @media (max-width: 1024px) {
+            .auth-split-layout { flex-direction: column; }
+            .auth-visual { min-height: 450px; padding: 2rem; flex: none; }
+            .auth-form-side { padding: 2rem 1rem; }
+            .enhanced-card { padding: 2.5rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html"><span>➕ Lifeline HMS</span></a>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="login.html" class="nav-link">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="auth-split-layout">
+        <div class="auth-visual">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            
+            <div class="visual-content">
+                <h1>The Future of Healthcare Management</h1>
+                <p>Join Lifeline HMS and experience a seamless, secure, and intelligent platform designed to optimize hospital workflows and elevate patient care.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🚀</div>
+                        <span>Lightning fast appointment scheduling</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <span>Enterprise-grade data security</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <span>Intuitive and responsive design</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-form-side">
+            <div class="card auth-card enhanced-card">
+                <div class="auth-header">
+                    <h2>Join Portal</h2>
+                    <p>Register as a Patient, Doctor, or Administrator</p>
+                </div>
+                <form id="register-form">
+
+                    <!-- ── Basic Account Info ── -->
+                    <div class="enhanced-form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                    <div class="enhanced-form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="example@hospital.com" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="enhanced-form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
+                        </div>
+                        <div class="enhanced-form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-control" placeholder="Secure password" required>
+                        </div>
+                    </div>
+                    <div class="enhanced-form-group" style="margin-bottom: 2rem;">
+                        <label for="role">Register As</label>
+                        <select id="role" class="form-control" required style="cursor: pointer;">
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="PATIENT">Patient (Book Appointments, View Prescriptions)</option>
+                            <option value="DOCTOR">Doctor (Manage Patients, Schedule, Write Prescriptions)</option>
+                            <option value="ADMIN">Administrator (Manage System &amp; Hospital Records)</option>
+                        </select>
+                    </div>
+
+                <!-- ── Patient-Specific Fields ── -->
+                <div id="patient-fields" class="role-fields">
+                    <div class="section-divider">
+                        <span class="role-badge patient">👤 Patient Details</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="enhanced-form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" class="form-control" placeholder="Your age" min="0" max="150">
+                        </div>
+                        <div class="enhanced-form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="enhanced-form-group">
+                            <label for="contactNumber">Contact Number</label>
+                            <input type="tel" id="contactNumber" class="form-control" placeholder="e.g. 9876543210">
+                        </div>
+                        <div class="enhanced-form-group">
+                            <label for="aadhaarNumber">Aadhaar Number <span class="optional-tag">(optional)</span></label>
+                            <input type="text" id="aadhaarNumber" class="form-control" placeholder="12-digit Aadhaar" maxlength="12">
+                        </div>
+                    </div>
+                    <div class="enhanced-form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" class="form-control" placeholder="Your residential address">
+                    </div>
+                    <div class="enhanced-form-group">
+                        <label for="medicalHistory">Medical History <span class="optional-tag">(optional)</span></label>
+                        <textarea id="medicalHistory" class="form-control" rows="2" placeholder="Any known conditions, allergies, or past treatments..." style="resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <!-- ── Doctor-Specific Fields ── -->
+                <div id="doctor-fields" class="role-fields">
+                    <div class="section-divider">
+                        <span class="role-badge doctor">🩺 Doctor Details</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="enhanced-form-group">
+                            <label for="specialization">Specialization</label>
+                            <select id="specialization" class="form-control">
+                                <option value="">Select Specialization</option>
+                                <option value="General Practitioner">General Practitioner</option>
+                                <option value="Cardiologist">Cardiologist</option>
+                                <option value="Dermatologist">Dermatologist</option>
+                                <option value="Neurologist">Neurologist</option>
+                                <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                                <option value="Pediatrician">Pediatrician</option>
+                                <option value="Psychiatrist">Psychiatrist</option>
+                                <option value="Radiologist">Radiologist</option>
+                                <option value="ENT Specialist">ENT Specialist</option>
+                                <option value="Ophthalmologist">Ophthalmologist</option>
+                                <option value="Gynecologist">Gynecologist</option>
+                                <option value="Oncologist">Oncologist</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="enhanced-form-group">
+                            <label for="doctorContact">Contact Number</label>
+                            <input type="tel" id="doctorContact" class="form-control" placeholder="e.g. 9876543210">
+                        </div>
+                    </div>
+
+                    <!-- 4-Field Availability Schedule -->
+                    <div class="form-group">
+                        <label>Availability Schedule</label>
+                        <div class="avail-grid">
+                            <div>
+                                <div class="avail-label">From Day</div>
+                                <select id="avail-day-from" class="form-control">
+                                    <option value="Monday">Monday</option>
+                                    <option value="Tuesday">Tuesday</option>
+                                    <option value="Wednesday">Wednesday</option>
+                                    <option value="Thursday">Thursday</option>
+                                    <option value="Friday">Friday</option>
+                                    <option value="Saturday">Saturday</option>
+                                    <option value="Sunday">Sunday</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="avail-label">To Day</div>
+                                <select id="avail-day-to" class="form-control">
+                                    <option value="Monday">Monday</option>
+                                    <option value="Tuesday">Tuesday</option>
+                                    <option value="Wednesday">Wednesday</option>
+                                    <option value="Thursday">Thursday</option>
+                                    <option value="Friday" selected>Friday</option>
+                                    <option value="Saturday">Saturday</option>
+                                    <option value="Sunday">Sunday</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="avail-label">From Time</div>
+                                <select id="avail-time-from" class="form-control"></select>
+                            </div>
+                            <div>
+                                <div class="avail-label">To Time</div>
+                                <select id="avail-time-to" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="avail-preview" id="avail-preview-reg">📅 Mon - Fri, 9:00 AM - 5:00 PM</div>
+                    </div>
+                </div>
+
+                    <button type="submit" class="btn btn-primary enhanced-btn-primary" id="submit-btn">
+                        Create Account ➜
+                    </button>
+                </form>
+                <div class="auth-footer" style="margin-top: 2rem; font-size: 0.95rem;">
+                    Already have an account? <a href="login.html" style="margin-left: 5px;">Sign In Here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Lifeline Hospital Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Redirect if already logged in
+            const user = Auth.getUser();
+            if (user) Auth.redirectToDashboard(user.role);
+
+            const roleSelect   = document.getElementById('role');
+            const patientFields = document.getElementById('patient-fields');
+            const doctorFields  = document.getElementById('doctor-fields');
+
+            // Populate time options
+            const timeFromSelect = document.getElementById('avail-time-from');
+            const timeToSelect = document.getElementById('avail-time-to');
+            const hours = [
+                "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", 
+                "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", 
+                "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM"
+            ];
+            
+            hours.forEach(hour => {
+                const optFrom = new Option(hour, hour);
+                const optTo = new Option(hour, hour);
+                timeFromSelect.add(optFrom);
+                timeToSelect.add(optTo);
+            });
+
+            // Set default values for time dropdowns
+            timeFromSelect.value = "9:00 AM";
+            timeToSelect.value = "5:00 PM";
+
+            // Live preview function
+            function updateAvailabilityPreview() {
+                const dayFrom = document.getElementById('avail-day-from').value;
+                const dayTo = document.getElementById('avail-day-to').value;
+                const timeFrom = timeFromSelect.value;
+                const timeTo = timeToSelect.value;
+                
+                const previewText = `📅 ${dayFrom} - ${dayTo}, ${timeFrom} - ${timeTo}`;
+                document.getElementById('avail-preview-reg').textContent = previewText;
+                return `${dayFrom} - ${dayTo}, ${timeFrom} - ${timeTo}`;
+            }
+
+            // Bind update event to all availability selects
+            ['avail-day-from', 'avail-day-to', 'avail-time-from', 'avail-time-to'].forEach(id => {
+                document.getElementById(id).addEventListener('change', updateAvailabilityPreview);
+            });
+
+            // Initial preview update
+            updateAvailabilityPreview();
+
+            // Show/hide role-specific fields on role change
+            roleSelect.addEventListener('change', () => {
+                const role = roleSelect.value;
+                patientFields.classList.toggle('visible', role === 'PATIENT');
+                doctorFields.classList.toggle('visible',  role === 'DOCTOR');
+            });
+
+            // Form submission
+            document.getElementById('register-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submit-btn');
+                btn.disabled = true;
+                btn.textContent = 'Creating Account...';
+
+                const fullName = document.getElementById('fullName').value.trim();
+                const email    = document.getElementById('email').value.trim();
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const role     = document.getElementById('role').value;
+
+                try {
+                    // Step 1: Register the User account
+                    const registeredUser = await apiRequest('/users/register', {
+                        method: 'POST',
+                        body: JSON.stringify({ fullName, email, username, password, role })
+                    });
+
+                    // Step 2: Update the role-specific profile with the extra details
+                    if (role === 'PATIENT') {
+                        const age           = document.getElementById('age').value;
+                        const gender        = document.getElementById('gender').value;
+                        const contactNumber = document.getElementById('contactNumber').value.trim();
+                        const aadhaarNumber = document.getElementById('aadhaarNumber').value.trim();
+                        const address       = document.getElementById('address').value.trim();
+                        const medicalHistory = document.getElementById('medicalHistory').value.trim();
+
+                        // Get the newly created patient profile (auto-created on user register)
+                        const patientProfile = await apiRequest(`/patients/user/${registeredUser.id}`);
+
+                        // Update the patient profile with the entered details
+                        await apiRequest(`/patients/${patientProfile.id}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({
+                                age:           age ? parseInt(age) : 0,
+                                gender:        gender || 'Not Specified',
+                                contactNumber: contactNumber,
+                                aadhaarNumber: aadhaarNumber || null,
+                                address:       address,
+                                medicalHistory: medicalHistory || 'No previous history recorded.'
+                            })
+                        });
+
+                    } else if (role === 'DOCTOR') {
+                        const specialization = document.getElementById('specialization').value;
+                        const contactNumber  = document.getElementById('doctorContact').value.trim();
+                        const availabilityStr = updateAvailabilityPreview();
+
+                        // Get the newly created doctor profile (auto-created on user register)
+                        const doctorProfile = await apiRequest(`/doctors/user/${registeredUser.id}`);
+
+                        // Update the doctor profile with the entered details
+                        await apiRequest(`/doctors/${doctorProfile.id}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({
+                                specialization: specialization || 'General Practitioner',
+                                contactNumber:  contactNumber,
+                                email:          email,
+                                availability:   availabilityStr
+                            })
+                        });
+                    }
+
+                    showToast('Registration successful! Redirecting to login...', 'success');
+                    setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.textContent = 'Create Account';
+                    showToast(err.message || 'Registration failed. Username may already exist.', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

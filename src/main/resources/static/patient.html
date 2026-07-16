@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMS Patient Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html"><span>➕ Lifeline HMS</span></a>
+            </div>
+            <nav class="nav-links">
+                <span id="user-display" style="font-weight: 600; color: var(--text-secondary);">Patient Portal</span>
+                <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="dashboard-grid">
+            
+            <!-- Sidebar -->
+            <div class="card" style="padding: 1.5rem;">
+                <div class="sidebar-profile">
+                    <div class="sidebar-avatar" id="patient-avatar">P</div>
+                    <h3 id="patient-sidebar-name">Loading...</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Patient Account</p>
+                </div>
+                <div class="sidebar-nav">
+                    <div class="sidebar-link active" onclick="switchTab('profile', this)">👤 My Profile</div>
+                    <div class="sidebar-link" onclick="switchTab('history', this); loadAppointments();">📅 My Appointments</div>
+                    <div class="sidebar-link" onclick="switchTab('book', this); loadDoctors();">➕ Book Appointment</div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <!-- Tab Pane: Profile -->
+                <div id="tab-profile" class="tab-pane active">
+                    <div class="card">
+                        <div class="section-title">👤 Patient Profile Details</div>
+                        <form id="profile-form">
+                            <div class="grid-2">
+                                <div class="form-group">
+                                    <label for="prof-fullName">Full Name</label>
+                                    <input type="text" id="prof-fullName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-email">Email Address</label>
+                                    <input type="email" id="prof-email" class="form-control" readonly style="background-color: #f1f2f6; cursor: not-allowed;">
+                                </div>
+                            </div>
+                            <div class="grid-3">
+                                <div class="form-group">
+                                    <label for="prof-age">Age (Years)</label>
+                                    <input type="number" id="prof-age" class="form-control" min="0" max="150" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-gender">Gender</label>
+                                    <select id="prof-gender" class="form-control" required>
+                                        <option value="Not Specified">Not Specified</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-phone">Contact Number</label>
+                                    <input type="tel" id="prof-phone" class="form-control" placeholder="10-digit number" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-address">Residential Address</label>
+                                <input type="text" id="prof-address" class="form-control" placeholder="123 Health Street" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 2rem;">
+                                <label for="prof-history">Medical History (Allergies, chronic issues, etc.)</label>
+                                <textarea id="prof-history" class="form-control" placeholder="Write any previous illness, surgery or medication..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile Settings</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tab Pane: Appointments History -->
+                <div id="tab-history" class="tab-pane">
+                    <div class="card">
+                        <div class="section-title">📅 Appointment History & Status</div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Doctor Name</th>
+                                        <th>Specialization</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Reason / Notes</th>
+                                        <th>Prescription</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appointments-tbody">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: var(--text-secondary);">Loading appointments...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Pane: Book Appointment -->
+                <div id="tab-book" class="tab-pane">
+                    <div class="card">
+                        <div class="section-title">➕ Request Consultation Appointment</div>
+                        <form id="book-form">
+                            <div class="form-group">
+                                <label for="book-doctor">Select Care Doctor</label>
+                                <select id="book-doctor" class="form-control" required style="cursor: pointer;">
+                                    <option value="" disabled selected>Select Available Doctor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="book-date">Consultation Date</label>
+                                <input type="date" id="book-date" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 2rem;">
+                                <label for="book-reason">Describe Consultation Reason / Symptoms</label>
+                                <textarea id="book-reason" class="form-control" placeholder="Fever, regular checkup, orthopedic follow-up..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Schedule Consultation</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for viewing prescriptions -->
+    <div id="prescription-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closePrescriptionModal()">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">💊 Consultation Prescription</h3>
+            <div style="background-color: var(--primary-light); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+                <p><strong>Doctor:</strong> <span id="pres-doc-name"></span></p>
+                <p><strong>Date:</strong> <span id="pres-date"></span></p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">Prescribed Medication & Advice:</h4>
+                <div id="pres-content" style="white-space: pre-line; color: var(--text-secondary); line-height: 1.5; font-style: italic;">
+                    No prescription details available.
+                </div>
+            </div>
+            <button onclick="closePrescriptionModal()" class="btn btn-secondary" style="width: 100%;">Close</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Lifeline Hospital Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentUser = null;
+        let patientProfile = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            currentUser = Auth.checkAuth(['PATIENT']);
+            if (!currentUser) return;
+
+            // Set up UI with User Info
+            document.getElementById('user-display').innerText = `Patient Portal: ${currentUser.fullName}`;
+            document.getElementById('patient-sidebar-name').innerText = currentUser.fullName;
+            document.getElementById('patient-avatar').innerText = currentUser.fullName.charAt(0).toUpperCase();
+
+            // Set minimum date for appointments to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('book-date').setAttribute('min', today);
+
+            loadProfile();
+
+            // Handle Profile Submission
+            const profileForm = document.getElementById('profile-form');
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const updatedPayload = {
+                    age: parseInt(document.getElementById('prof-age').value),
+                    gender: document.getElementById('prof-gender').value,
+                    contactNumber: document.getElementById('prof-phone').value,
+                    address: document.getElementById('prof-address').value,
+                    medicalHistory: document.getElementById('prof-history').value,
+                    user: {
+                        fullName: document.getElementById('prof-fullName').value
+                    }
+                };
+
+                try {
+                    const result = await apiRequest(`/patients/${patientProfile.id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(updatedPayload)
+                    });
+                    
+                    showToast('Profile updated successfully!', 'success');
+                    
+                    // Update current user details in storage
+                    currentUser.fullName = result.user.fullName;
+                    Auth.saveUser(currentUser);
+                    
+                    document.getElementById('patient-sidebar-name').innerText = currentUser.fullName;
+                    document.getElementById('patient-avatar').innerText = currentUser.fullName.charAt(0).toUpperCase();
+                    document.getElementById('user-display').innerText = `Patient Portal: ${currentUser.fullName}`;
+                    
+                    patientProfile = result;
+                } catch (err) {
+                    showToast(err.message || 'Failed to update profile.', 'error');
+                }
+            });
+
+            // Handle Booking Submission
+            const bookForm = document.getElementById('book-form');
+            bookForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const doctorId = document.getElementById('book-doctor').value;
+                const appointmentDate = document.getElementById('book-date').value;
+                const reason = document.getElementById('book-reason').value.trim();
+
+                const payload = {
+                    patient: { id: patientProfile.id },
+                    doctor: { id: parseInt(doctorId) },
+                    appointmentDate: appointmentDate,
+                    reason: reason
+                };
+
+                try {
+                    await apiRequest('/appointments', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+
+                    showToast('Appointment booked successfully! Status is pending approval.', 'success');
+                    bookForm.reset();
+                    
+                    // Switch to history tab
+                    const historyTabBtn = document.querySelector('.sidebar-nav div:nth-child(2)');
+                    switchTab('history', historyTabBtn);
+                    loadAppointments();
+                } catch (err) {
+                    showToast(err.message || 'Failed to book appointment.', 'error');
+                }
+            });
+        });
+
+        // Tab Switcher
+        function switchTab(tabId, el) {
+            // Remove active classes
+            document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            // Add active class to clicked element and corresponding pane
+            el.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Load Patient Profile
+        async function loadProfile() {
+            try {
+                const profile = await apiRequest(`/patients/user/${currentUser.id}`);
+                patientProfile = profile;
+                
+                document.getElementById('prof-fullName').value = profile.user.fullName;
+                document.getElementById('prof-email').value = profile.user.email;
+                document.getElementById('prof-age').value = profile.age || '';
+                document.getElementById('prof-gender').value = profile.gender || 'Not Specified';
+                document.getElementById('prof-phone').value = profile.contactNumber || '';
+                document.getElementById('prof-address').value = profile.address || '';
+                document.getElementById('prof-history').value = profile.medicalHistory || '';
+            } catch (err) {
+                showToast('Failed to load profile. Please complete fields.', 'warning');
+            }
+        }
+
+        // Load available doctors for select dropdown
+        async function loadDoctors() {
+            const selectEl = document.getElementById('book-doctor');
+            selectEl.innerHTML = '<option value="" disabled selected>Loading available doctors...</option>';
+
+            try {
+                const doctors = await apiRequest('/doctors');
+                selectEl.innerHTML = '<option value="" disabled selected>Select Available Doctor</option>';
+                
+                if (doctors.length === 0) {
+                    selectEl.innerHTML = '<option value="" disabled>No doctors available at this time</option>';
+                    return;
+                }
+
+                doctors.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.innerText = `Dr. ${doc.user.fullName} (${doc.specialization}) - [${doc.availability}]`;
+                    selectEl.appendChild(option);
+                });
+            } catch (err) {
+                showToast('Failed to load available doctors.', 'error');
+            }
+        }
+
+        // Load appointment history
+        async function loadAppointments() {
+            const tbody = document.getElementById('appointments-tbody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-secondary);">Loading appointments...</td></tr>';
+
+            try {
+                const appointments = await apiRequest(`/appointments/patient/user/${currentUser.id}`);
+                tbody.innerHTML = '';
+
+                if (appointments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-secondary);">No appointments booked yet.</td></tr>';
+                    return;
+                }
+
+                // Sorting: newer appointments first
+                appointments.sort((a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate));
+
+                appointments.forEach(appt => {
+                    const tr = document.createElement('tr');
+                    
+                    // Status Badge Class
+                    let badgeClass = 'badge-pending';
+                    if (appt.status === 'APPROVED') badgeClass = 'badge-approved';
+                    if (appt.status === 'COMPLETED') badgeClass = 'badge-completed';
+                    if (appt.status === 'CANCELLED') badgeClass = 'badge-cancelled';
+
+                    // Prescription button configuration
+                    let prescriptionBtn = '<span style="color: var(--text-secondary); font-style: italic;">None yet</span>';
+                    if (appt.status === 'COMPLETED' && appt.prescription) {
+                        prescriptionBtn = `<button onclick="viewPrescription('Dr. ${appt.doctor.user.fullName}', '${appt.appointmentDate}', \`${appt.prescription.replace(/`/g, '\\`').replace(/'/g, "\\'")}\`)" class="btn btn-secondary btn-sm">👁️ View</button>`;
+                    }
+
+                    // Cancel button configuration
+                    let cancelBtn = '';
+                    if (appt.status === 'PENDING' || appt.status === 'APPROVED') {
+                        cancelBtn = `<button onclick="cancelAppointment(${appt.id})" class="btn btn-danger btn-sm">❌ Cancel</button>`;
+                    } else {
+                        cancelBtn = '<span style="color: var(--text-secondary);">-</span>';
+                    }
+
+                    tr.innerHTML = `
+                        <td style="font-weight: 600;">Dr. ${appt.doctor.user.fullName}</td>
+                        <td>${appt.doctor.specialization}</td>
+                        <td>${appt.appointmentDate}</td>
+                        <td><span class="badge ${badgeClass}">${appt.status}</span></td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${appt.reason}</td>
+                        <td>${prescriptionBtn}</td>
+                        <td>${cancelBtn}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                showToast('Failed to load appointments.', 'error');
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--danger);">Error loading appointment history.</td></tr>';
+            }
+        }
+
+        // Cancel Appointment (changes status to CANCELLED)
+        async function cancelAppointment(id) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) return;
+
+            try {
+                await apiRequest(`/appointments/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'CANCELLED' })
+                });
+
+                showToast('Appointment cancelled successfully.', 'success');
+                loadAppointments();
+            } catch (err) {
+                showToast(err.message || 'Failed to cancel appointment.', 'error');
+            }
+        }
+
+        // View Prescription Dialog
+        function viewPrescription(doctorName, date, prescriptionText) {
+            document.getElementById('pres-doc-name').innerText = doctorName;
+            document.getElementById('pres-date').innerText = date;
+            document.getElementById('pres-content').innerText = prescriptionText || 'No advice detailed.';
+            document.getElementById('prescription-modal').classList.add('show');
+        }
+
+        function closePrescriptionModal() {
+            document.getElementById('prescription-modal').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
