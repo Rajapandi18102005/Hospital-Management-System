@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: springboot-app
+    runtime: docker
+    plan: free
+
+    dockerfilePath: ./Dockerfile
+
+    envVars:
+      - key: PORT
+        value: 8080
